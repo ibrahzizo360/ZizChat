@@ -3,6 +3,8 @@ import { Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, V
 import { useState } from "react";
 import {useNavigate} from 'react-router-dom';
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setAuthState } from "../../store/authSlice";
 
 
 export default function Login(){
@@ -12,6 +14,8 @@ export default function Login(){
     const [showpassword, setShowpassword] = useState(false);
     const toast = useToast();
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
 
     const handleClick = () => setShowpassword(!showpassword);
     const submitHandler = async () => {
@@ -35,7 +39,7 @@ export default function Login(){
             }
             const {data} = await axios.post('http://localhost:5000/api/user/login', {email, password}, config)
             toast({
-                title: 'Registration Successful',
+                title: 'Login Successful',
                 status: 'success',
                 duration: 5000,
                 isClosable: true,
@@ -43,6 +47,7 @@ export default function Login(){
               })
             
             localStorage.setItem('userInfo', JSON.stringify(data));
+            dispatch(setAuthState(JSON.stringify(data)))
             setLoading(false);
             navigate('/chats');
 
@@ -92,12 +97,11 @@ export default function Login(){
                 </InputRightElement>
                 </InputGroup>
             </FormControl>
-    
             <Button colorScheme="teal"
             width='100%'
             style={{marginTop: 15}}
             onClick={submitHandler}
-            isloading={loading}
+            isLoading={loading}
             >
             Login
             </Button>

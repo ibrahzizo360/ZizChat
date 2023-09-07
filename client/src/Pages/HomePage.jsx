@@ -1,10 +1,25 @@
 import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
 import Login from '../Components/Authentication/Login';
 import Register from '../Components/Authentication/Register';
+import { useCurrentUser } from "../hooks/useCurrentUser";
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectAuthState } from "../store/authSlice";
 
 
 
 export default function HomePage(){
+    const navigate = useNavigate();
+    const authState = useSelector(selectAuthState);
+    const { user, isAuthenticated } = authState;
+        useEffect(() => {
+        if (user) {
+          navigate("/chats");
+        }
+      }, [user, navigate]);
+
+    
     return(
         <Container maxW='xl' centerContent>
              <Box
@@ -34,13 +49,13 @@ export default function HomePage(){
                     </TabList>
                     <TabPanels>
                         <TabPanel>
-                        <Login/>
+                            <Login/>
                         </TabPanel>
                         <TabPanel>
-                        <Register/>
+                            <Register/>
                         </TabPanel>
                     </TabPanels>
-                    </Tabs>
+                </Tabs>
              </Box>
         </Container>  
     )
