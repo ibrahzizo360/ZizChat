@@ -1,29 +1,26 @@
 
 import { Box } from '@chakra-ui/react';
-import { useCurrentUser } from '../hooks/useCurrentUser';
-import SideDrawer from '../Components/Miscellaneous/SideDrawer';
-import MyChats from '../Components/Miscellaneous/MyChats';
-import ChatBox from '../Components/Miscellaneous/ChatBox';
+import MyChats from '../Components/MyChats';
+import ChatBox from '../Components/ChatBox';
 import { useSelector } from 'react-redux';
 import { selectAuthState } from '../store/authSlice';
+import { useState } from 'react';
+import SideDrawer from '../Components/miscellaneous/SideDrawer';
 
 export default function ChatPage(){
     const authState = useSelector(selectAuthState);
-    const { user, isAuthenticated } = authState;
+    const { user } = authState;
+    const [fetchAgain, setFetchAgain] = useState(false);
     
-    return(
-        <div className="w-full">
-           {user && <SideDrawer/>}
-           <Box
-           display='flex'
-           justifyContent={'space-between'}
-           w="100%"
-           h="91.5vh"
-           p="10px"
-           >
-            {user && <MyChats/>}
-            {user && <ChatBox/>}
-           </Box>
-        </div>    
-    )
-};
+    return (
+        <div className='w-full'>
+          {user && <SideDrawer />}
+          <Box display="flex" justifyContent="space-between" h="90.5vh" p="10px">
+            {user && <MyChats fetchAgain={fetchAgain} />}
+            {user && (
+              <ChatBox fetchAgain={fetchAgain} setFetchAgain={setFetchAgain} />
+            )}
+          </Box>
+        </div>
+      );
+    };

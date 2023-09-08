@@ -12,7 +12,6 @@ import {
   IconButton,
   Text,
   Image,
-  Spinner,
 } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import { selectAuthState } from "../../store/authSlice";

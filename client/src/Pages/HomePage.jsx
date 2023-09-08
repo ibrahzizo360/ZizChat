@@ -1,6 +1,6 @@
 import { Box, Container, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
-import Login from '../Components/Authentication/Login';
-import Register from '../Components/Authentication/Register';
+import Login from '../Components/authentication/Login';
+import Register from '../Components/authentication/Register';
 import { useCurrentUser } from "../hooks/useCurrentUser";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";

@@ -5,10 +5,10 @@ import ProfileModal from './ProfileModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectAuthState, setAuthState } from '../../store/authSlice'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
 import Axios from '../../Utils/Axios'
 import ChatLoading from '../ChatLoading'
-import UserListItem from '../UserAvatar/UserListItem'
+import UserListItem from '../userAvatar/UserListItem'
+import { selectChatState, setChats, setSelectedChat } from '../../store/chatSlice'
 
 const SideDrawer = () => {
   const [search, setSearch] = useState("")
@@ -16,11 +16,14 @@ const SideDrawer = () => {
   const [loading, setLoading] = useState(false)
   const [loadingChat, setLoadingChat] = useState(false)
   const authState = useSelector(selectAuthState);
-  const { user, isAuthenticated } = authState;
+  const { user } = authState;
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const chat = useSelector(selectChatState);
+  const {chats} = chat;
+
 
   const logoutHandler = () => {
     localStorage.removeItem('userInfo')
@@ -28,7 +31,34 @@ const SideDrawer = () => {
     navigate('/')
   }
 
-  const accessChat = () => {}
+  const accessChat = async (userId) => {
+
+    try {
+      setLoadingChat(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+
+      const { data } = await Axios.post(`/api/chat`, { userId }, config);
+
+      if (!chats.find((c) => c._id === data._id)) dispatch(setChats([data, ...chats]));
+      dispatch(setSelectedChat(data));
+      setLoadingChat(false);
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Error fetching the chat",
+        description: error.message,
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-left",
+      });
+    }
+  };
 
   const handleSearch = async () => {
     if (!search) {
@@ -52,7 +82,6 @@ const SideDrawer = () => {
       };
 
       const { data } = await Axios.get(`/api/user?search=${search}`, config);
-      console.log(data)
 
       setLoading(false);
       setSearchResult(data);
@@ -77,7 +106,8 @@ const SideDrawer = () => {
         alignItems={'center'}
         w='100%'
         p='5px 10px 5px 10px'
-        borderWidth={'5px'}
+        borderWidth={'3px'}
+        borderColor={'#E8E8E8'}
         >
             <Tooltip label="Search users to chat" hasArrow placement='bottom-end'>
                 <Button variant="ghost" onClick={onOpen}>
