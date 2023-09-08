@@ -66,7 +66,6 @@ const GroupChatModal = ({ children }) => {
         },
       };
       const { data } = await Axios.get(`/api/user?search=${search}`, config);
-      console.log(data);
       setLoading(false);
       setSearchResult(data);
     } catch (error) {
@@ -103,11 +102,11 @@ const GroupChatModal = ({ children }) => {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post(
+      const { data } = await Axios.post(
         `/api/chat/group`,
         {
           name: groupChatName,
-          users: JSON.stringify(selectedUsers.map((u) => u._id)),
+          users: selectedUsers.map((u) => u._id)
         },
         config
       );
@@ -131,6 +130,7 @@ const GroupChatModal = ({ children }) => {
       });
     }
   };
+  console.log(searchResult)
 
   return (
     <>
@@ -142,13 +142,13 @@ const GroupChatModal = ({ children }) => {
           <ModalHeader
             fontSize="35px"
             fontFamily="Work sans"
-            d="flex"
+            display="flex"
             justifyContent="center"
           >
             Create Group Chat
           </ModalHeader>
           <ModalCloseButton />
-          <ModalBody d="flex" flexDir="column" alignItems="center">
+          <ModalBody display="flex" flexDir="column" alignItems="center">
             <FormControl>
               <Input
                 placeholder="Chat Name"
@@ -163,7 +163,7 @@ const GroupChatModal = ({ children }) => {
                 onChange={(e) => handleSearch(e.target.value)}
               />
             </FormControl>
-            <Box w="100%" d="flex" flexWrap="wrap">
+            <Box w="100%" display="flex" flexWrap="wrap">
               {selectedUsers.map((u) => (
                 <UserBadgeItem
                   key={u._id}
