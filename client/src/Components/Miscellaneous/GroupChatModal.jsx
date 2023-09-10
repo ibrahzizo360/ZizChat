@@ -13,11 +13,10 @@ import {
   useToast,
   Box,
 } from "@chakra-ui/react";
-import axios from "axios";
 import { useState } from "react";
 import UserBadgeItem from "../userAvatar/UserBadgeItem";
 import UserListItem from "../userAvatar/UserListItem";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectAuthState } from "../../store/authSlice";
 import { selectChatState, setChats } from "../../store/chatSlice";
 import Axios from "../../Utils/Axios";
@@ -30,6 +29,7 @@ const GroupChatModal = ({ children }) => {
   const [searchResult, setSearchResult] = useState([]);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+  const dispatch = useDispatch();
 
   const authState = useSelector(selectAuthState)
   const chat = useSelector(selectChatState);
@@ -110,7 +110,7 @@ const GroupChatModal = ({ children }) => {
         },
         config
       );
-      setChats([data, ...chats]);
+      dispatch(setChats([data, ...chats]));
       onClose();
       toast({
         title: "New Group Chat Created!",
@@ -130,7 +130,6 @@ const GroupChatModal = ({ children }) => {
       });
     }
   };
-  console.log(searchResult)
 
   return (
     <>
